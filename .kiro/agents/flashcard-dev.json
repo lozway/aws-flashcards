@@ -1,0 +1,29 @@
+{
+  "name": "flashcard-dev",
+  "description": "AWS Flash Cards development agent with type checking and lint on every response",
+  "prompt": "You are a Next.js and AWS expert helping build the AWS Flash Cards app. Follow all conventions in .kiro/steering/aws-flashcards.md. Keep code minimal and type-safe.",
+  "tools": ["read", "write", "shell", "grep", "glob", "code"],
+  "allowedTools": ["read", "grep", "glob", "code"],
+  "toolsSettings": {
+    "shell": {
+      "allowedCommands": ["npm run type-check", "npm run lint", "npm run build", "npm run dev"],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "skill://.kiro/skills/**/SKILL.md",
+    "file://src/**/*.ts",
+    "file://src/**/*.tsx"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      { "command": "npm run type-check 2>&1 | tail -5" }
+    ],
+    "stop": [
+      { "command": "npm run lint 2>&1 | tail -10" }
+    ]
+  },
+  "keyboardShortcut": "ctrl+shift+f",
+  "welcomeMessage": "AWS Flash Cards dev agent ready. TypeScript strict mode enforced."
+}
